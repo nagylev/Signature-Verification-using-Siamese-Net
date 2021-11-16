@@ -1,5 +1,9 @@
 import torch
 from torch import nn
+import img_read as read
+from torchvision import transforms
+from PIL import ImageOps
+
 
 class SigSiameseNet(torch.nn.Module):
     '''
@@ -26,7 +30,7 @@ class SigSiameseNet(torch.nn.Module):
 
         self.cnnModel = nn.Sequential(
             # input shape megallapitasa (img_w, img_h,1)
-            nn.Conv2d(1, 96, kernel_size=11, stride=1),
+            nn.Conv2d(1, 96, kernel_size=11),
             # (kimenet_mérete= bemenet-kernel_size+1, mindket dimenzioban) [452,1123]
             nn.ReLU(),  # relu aktivációs fv
             nn.LocalResponseNorm(size=5, k=2, alpha=1e-4, beta=0.75),
@@ -64,19 +68,37 @@ class SigSiameseNet(torch.nn.Module):
         return in1  # , in2
 
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print('Using {} device'.format(device))
+# print('Using {} device'.format(device))
+#
+# model = SigSiameseNet().to(device)
+# print(model)
 
-model = SigSiameseNet().to(device)
-print(model)
+# X = torch.rand(452, 1123)
 
-X = torch.rand(452, 1123)
-
-
-
-
-print(X)
-logits = model(X)
-pred_probab = nn.Softmax(dim=1)(logits)
-y_pred = pred_probab.argmax(1)
-print(f"Predicted class: {y_pred}")
+# # Loading signs
+#
+# DataLoader = read.DataLoader()
+#
+# DataLoader.load()
+# genuen_images = DataLoader.genuine_images
+#
+# # print(genuen_images[2][2])
+#
+#
+# img = genuen_images[2][2]
+# img2 = genuen_images[2][3]
+#
+# data = []
+# x_np = torch.from_numpy(img)
+# data.append(x_np)
+# x_np2 = torch.from_numpy(img2)
+#
+# image_transform = transforms.Compose(
+#     [transforms.Resize((155, 220)),
+#      ImageOps.invert, transforms.ToTensor()]
+# )
+# current_pic = image_transform(img)
+# logits = model(current_pic)
+# pred_probab = nn.Softmax(dim=1)(logits)
+# y_pred = pred_probab.argmax(1)
+# print(f"Predicted class: {y_pred}")

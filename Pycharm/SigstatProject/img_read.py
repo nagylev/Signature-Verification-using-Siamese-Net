@@ -34,56 +34,55 @@ class DataLoader():
         return self.forged_images
 
 
-loader = DataLoader()
-loader.load()
-genuine_images = loader.getGenuine()
-forged_images = loader.getForged()
+# loader = DataLoader()
+# loader.load()
+# genuine_images = loader.getGenuine()
+# forged_images = loader.getForged()
+#
+# len(genuine_images)
+#
+#
+# def rgb2gray(rgb):
+#     return np.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140])
+#
+#
+# img = genuine_images[2][2]
+#
+# print(type(img))
+# gray = rgb2gray(img)
+# plt.imshow(gray, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
+# plt.show()
 
-len(genuine_images)
 
-
-def rgb2gray(rgb):
-    return np.dot(rgb[..., :3], [0.2989, 0.5870, 0.1140])
-
-
-img = genuine_images[2][2]
-
-print(type(img))
-gray = rgb2gray(img)
-plt.imshow(gray, cmap=plt.get_cmap('gray'), vmin=0, vmax=1)
-plt.show()
-
-
-def createPairs():
+def createPairs(genuine_images, forged_images):
     genuine_pairs = []
     forged_pairs = []
     pair = []
     for signer in range(len(genuine_images)):
         for i in range(len(genuine_images[signer]) - 1):
             for j in range(i + 1, len(genuine_images[signer])):
-                genuine_pairs.append([genuine_images[signer][i], genuine_images[signer][j]])
+                genuine_pairs.append([genuine_images[signer][i], genuine_images[signer][j], 1])
 
     for signer in range(len(genuine_images)):
         for i in range(len(genuine_images[signer])):
             for j in range(len(forged_images[signer])):
-                forged_pairs.append([genuine_images[signer][i], genuine_images[signer][j]])
+                forged_pairs.append([genuine_images[signer][i], genuine_images[signer][j], 0])
                 pair.append((i, j))
 
     return genuine_pairs, forged_pairs
 
-
-genuine_pairs, forged_pairs = createPairs()
-
-filename = "data/genuine_genuine_data.csv"
-
-with open(filename, 'w') as csvfile:
-    csvwriter = csv.writer(csvfile)
-
-    csvwriter.writerows(genuine_pairs)
-
-filename = "data/genuine_forged_data.csv"
-
-with open(filename, 'w') as csvfile:
-    csvwriter = csv.writer(csvfile)
-
-    csvwriter.writerows(forged_pairs)
+# genuine_pairs, forged_pairs = createPairs()
+#
+# filename = "data/genuine_genuine_data.csv"
+#
+# with open(filename, 'w') as csvfile:
+#     csvwriter = csv.writer(csvfile)
+#
+#     csvwriter.writerows(genuine_pairs)
+#
+# filename = "data/genuine_forged_data.csv"
+#
+# with open(filename, 'w') as csvfile:
+#     csvwriter = csv.writer(csvfile)
+#
+#     csvwriter.writerows(forged_pairs)
