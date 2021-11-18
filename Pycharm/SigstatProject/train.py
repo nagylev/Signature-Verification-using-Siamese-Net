@@ -1,12 +1,16 @@
+import torch
+
+
 def train(model, optimizer, loss, device, data):
     model.train()
     # batch implementalasa
 
     for pair in data[0]:
         print(pair)
-        s1 = pair[0].to(device)
-        s2 = pair[1].to(device)
-        y = pair[2].to(device)
+        s1 = torch.from_numpy(pair[0]).float().to(device)
+        s2 = torch.from_numpy(pair[1]).float().to(device)
+        y = torch.from_numpy(pair[2]).float().to(device)
+
 
         # optimizeer.zero grad
         s1, s2 = model(s1, s2)

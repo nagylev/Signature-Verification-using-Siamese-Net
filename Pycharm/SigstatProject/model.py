@@ -62,11 +62,10 @@ class SigSiameseNet(torch.nn.Module):
 
         )
 
-    def forward(self, in1):
+    def forward(self, in1, in2):
         in1 = self.cnnModel(in1)
-        # in2= cnnModel(in2)
-        return in1  # , in2
-
+        in2 = self.cnnModel(in2)
+        return in1, in2
 
 # print('Using {} device'.format(device))
 #
