@@ -27,22 +27,22 @@ class SigSiameseNet(torch.nn.Module):
 
     def __init__(self):
         super().__init__()
-        # input image [462x1133] [4]channel
-        #input shape[462,1133,4]
+        # input image [600x1000] [4]channel
+        #input shape[4,1,1,600,1000,]
         self.cnnModel = nn.Sequential(
             # input shape megallapitasa (img_w, img_h,1)[4 van sajnos]
             nn.Conv2d(1, 96, kernel_size=11),
-            # (kimenet_mérete= bemenet-kernel_size+1, mindket dimenzioban) [452,1123]
+            # (kimenet_mérete= bemenet-kernel_size+1, mindket dimenzioban) [590,990]
             nn.ReLU(),  # relu aktivációs fv
             nn.LocalResponseNorm(size=5, k=2, alpha=1e-4, beta=0.75),
             # batch_normaliazation padding=(2,2)lehet meg kene ide
-            nn.MaxPool2d(3, stride=2),  # valszeg a fele lesz a kimenet meg nem tudom. [225, 560]
+            nn.MaxPool2d(3, stride=2),  # valszeg a fele lesz a kimenet meg nem tudom. [293, 493]
 
             nn.Conv2d(96, 256, kernel_size=5, stride=1, padding=2, padding_mode='zeros'),
             # (marad +4 a padding miatt, -5 kernel size +1 )
             nn.ReLU(),
             nn.LocalResponseNorm(size=5, k=2, alpha=1e-4, beta=0.75),
-            nn.MaxPool2d(3, stride=2),  # [111,278]
+            nn.MaxPool2d(3, stride=2),  # [145,245]
             nn.Dropout2d(p=0.3),
 
             nn.Conv2d(256, 384, kernel_size=3, stride=1, padding=1, padding_mode='zeros'),
@@ -50,11 +50,11 @@ class SigSiameseNet(torch.nn.Module):
             nn.ReLU(),
             nn.Conv2d(384, 256, kernel_size=3, stride=1, padding=1, padding_mode='zeros'),
             nn.ReLU(),
-            nn.MaxPool2d(3, stride=2),  # [54,137]
+            nn.MaxPool2d(3, stride=2),  # [72,121]
             nn.Dropout2d(p=0.3),
 
             nn.Flatten(),
-            nn.Linear(7398, 1024),
+            nn.Linear(2248704, 1024),
             nn.ReLU(),
             nn.Dropout2d(p=0.5),
 
