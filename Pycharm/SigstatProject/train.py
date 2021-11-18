@@ -1,3 +1,4 @@
+import numpy as np
 import torch
 
 
@@ -17,9 +18,6 @@ def train(model, optimizer, loss, device, data):
         loss = loss(s1, s2, y)
         loss.backward()
         optimizer.step()
-
-
-
 
 
 def eval(model, loss, data):

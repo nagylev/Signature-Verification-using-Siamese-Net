@@ -3,6 +3,7 @@ import model as SiameseModel
 import loss as CL
 import img_read as read
 import train
+import numpy as np
 
 torch.manual_seed(444)
 torch.cuda.manual_seed_all(444)
@@ -26,14 +27,13 @@ forged_images = DataLoader.forged_images
 
 # TODO test train split
 genuine_pairs, forged_pairs = read.createPairs(genine_images, forged_images)
-
 model.train()
 print(model)
 
 for epoch in range(epoch_num):
     print('Epoch {}/{}'.format(epoch, epoch_num))
     print('Training', '-' * 20)
-    train.train(model, optimizer, loss,device, genuine_pairs) #osszdata train
+    train.train(model, optimizer, loss, device, genuine_pairs) #osszdata train
     print('Evaluating', '-' * 20)
     # loss, acc = train.eval(model, loss, genuine_pairs) #katasztrofa osszdata teszt
     scheduler.step()

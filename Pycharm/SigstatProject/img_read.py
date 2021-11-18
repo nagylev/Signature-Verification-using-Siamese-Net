@@ -3,7 +3,7 @@ import glob
 import numpy as np
 import csv
 import matplotlib.image as mpimg
-
+import PIL
 
 # image scanner
 
@@ -20,10 +20,16 @@ class DataLoader():
             signer_genuine = []
             signer_forged = []
             for img_path in glob.glob(folder_path + '/*.png'):
+               #beolvasas atmeretezes atalakitas
+                sign = PIL.Image.open(img_path)
+                resized_sign = sign.resize((600, 1000))
+                resized_sign = np.array(resized_sign)
+                trans_sign = np.transpose(resized_sign, (2, 0, 1))
+
                 if img_path.find("Genuine") != -1:
-                    signer_genuine.append(mpimg.imread(img_path))
+                    signer_genuine.append(trans_sign)
                 if img_path.find("Forged") != -1:
-                    signer_forged.append(mpimg.imread(img_path))
+                    signer_forged.append(trans_sign)
             self.genuine_images.append(signer_genuine)
             self.forged_images.append(signer_forged)
 
@@ -57,18 +63,20 @@ class DataLoader():
 def createPairs(genuine_images, forged_images):
     genuine_pairs = []
     forged_pairs = []
-    pair = []
+
     for signer in range(len(genuine_images)):
         for i in range(len(genuine_images[signer]) - 1):
             for j in range(i + 1, len(genuine_images[signer])):
                 genuine_pairs.append([genuine_images[signer][i], genuine_images[signer][j], 1])
-
+    #egy alairohoz 190 ilyen genuine par keletkezik
+    #osszesen 20 * 190 = 3800
     for signer in range(len(genuine_images)):
         for i in range(len(genuine_images[signer])):
             for j in range(len(forged_images[signer])):
                 forged_pairs.append([genuine_images[signer][i], genuine_images[signer][j], 0])
-                pair.append((i, j))
 
+    # egy alairohoz 400 ilyen forged par keletkezik
+    #osszesen 20* 400 = 8000
     return genuine_pairs, forged_pairs
 
 # genuine_pairs, forged_pairs = createPairs()
