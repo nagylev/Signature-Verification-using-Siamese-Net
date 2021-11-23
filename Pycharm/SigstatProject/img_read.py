@@ -24,9 +24,9 @@ class DataLoader():
                 sign = PIL.Image.open(img_path)
                 resized_sign = sign.resize((150, 250))
                 resized_sign = np.array(resized_sign)
-                resized_sign = resized_sign[np.newaxis,np.newaxis, ...]
+                resized_sign = resized_sign[np.newaxis, ...]
 
-                trans_sign = np.transpose(resized_sign, (4, 0, 1, 2, 3))
+                trans_sign = np.transpose(resized_sign, (3, 0, 1, 2))
 
                 if img_path.find("Genuine") != -1:
                     signer_genuine.append(trans_sign)

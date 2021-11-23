@@ -11,7 +11,6 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 model = SiameseModel.SigSiameseNet().to(device)
 
-loss = CL.ContrastiveLoss(10e-4, 0.75, 1).to(device)
 
 # scheduler??
 optimizer = torch.optim.RMSprop(model.parameters(), lr=1e-5, eps=1e-8, weight_decay=5e-4, momentum=0.9)
@@ -33,7 +32,7 @@ print(model)
 for epoch in range(epoch_num):
     print('Epoch {}/{}'.format(epoch, epoch_num))
     print('Training', '-' * 20)
-    train.train(model, optimizer, loss, device, genuine_pairs) #osszdata train
+    train.train(model, optimizer, device, genuine_pairs) #osszdata train
     print('Evaluating', '-' * 20)
     # loss, acc = train.eval(model, loss, genuine_pairs) #katasztrofa osszdata teszt
     scheduler.step()
