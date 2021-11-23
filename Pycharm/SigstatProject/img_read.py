@@ -22,7 +22,7 @@ class DataLoader():
             for img_path in glob.glob(folder_path + '/*.png'):
                #beolvasas atmeretezes atalakitas
                 sign = PIL.Image.open(img_path)
-                resized_sign = sign.resize((600, 1000))
+                resized_sign = sign.resize((150, 250))
                 resized_sign = np.array(resized_sign)
                 resized_sign = resized_sign[np.newaxis,np.newaxis, ...]
 

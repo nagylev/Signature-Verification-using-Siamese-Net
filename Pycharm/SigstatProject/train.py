@@ -1,8 +1,10 @@
 import numpy as np
 import torch
 
+from loss import ContrastiveLoss
 
-def train(model, optimizer, loss, device, data):
+
+def train(model, optimizer, loss: ContrastiveLoss, device, data):
     model.train()
     # batch implementalasa
 
@@ -12,10 +14,9 @@ def train(model, optimizer, loss, device, data):
         s2 = torch.from_numpy(pair[1]).float().to(device)
         y = torch.from_numpy(pair[2]).float().to(device)
 
-
         # optimizeer.zero grad
         s1, s2 = model(s1, s2)
-        loss = loss(s1, s2, y)
+        loss = loss.forward(s1, s2, y)
         loss.backward()
         optimizer.step()
 
