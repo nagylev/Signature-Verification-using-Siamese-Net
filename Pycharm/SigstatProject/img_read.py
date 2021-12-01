@@ -3,8 +3,8 @@ import numpy as np
 import PIL
 
 
-# aláírások betöltése
-class DataLoader():
+class DataLoader:
+
     def __init__(self):
         self.genuine_images = []
         self.forged_images = []

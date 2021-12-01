@@ -14,8 +14,8 @@ class ContrastiveLoss(torch.nn.Module):
         distance = torch.cdist(s1, s2)
 
 
-        l = self.alfa * (1 - y) * distance ** 2 + self.beta * y * (max(0, self.margin - distance)) ** 2
+        calc_loss = self.alfa * (1 - y) * distance ** 2 + self.beta * y * (max(0, self.margin - distance)) ** 2
 
-        mean_loss = torch.mean(l, dtype=torch.float)
+        mean_loss = torch.mean(calc_loss, dtype=torch.float)
 
         return mean_loss
