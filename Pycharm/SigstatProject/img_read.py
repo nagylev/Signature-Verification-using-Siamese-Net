@@ -16,6 +16,7 @@ class DataLoader():
             signer_forged = []
             for img_path in glob.glob(folder_path + '/*.png'):
                 # beolvasas atmeretezes atalakitas
+                #150x250
                 sign = PIL.Image.open(img_path)
                 resized_sign = sign.resize((150, 250))
                 resized_sign = np.array(resized_sign)

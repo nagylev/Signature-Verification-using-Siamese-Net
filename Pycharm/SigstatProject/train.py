@@ -18,7 +18,7 @@ def train(model, optimizer, device, data):
 
         print(pair[2])
         print(y)
-        print(s1)
+        print(s1.shape)
 
         optimizer.zero_grad()
         s1, s2 = model(s1, s2)
