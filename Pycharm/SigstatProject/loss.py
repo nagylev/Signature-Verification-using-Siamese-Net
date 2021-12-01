@@ -9,8 +9,10 @@ class ContrastiveLoss(torch.nn.Module):
         self.beta = beta
         self.margin = margin
 
+    #s1, s2 egy-egy alairas
     def forward(self, s1, s2, y):
-        distance = torch.cdist(s1, s2)  # .pairwise_distance(x1, x2)
+        distance = torch.cdist(s1, s2)
+
 
         calc_loss = self.alfa * (1 - y) * distance ** 2 + self.beta * y * (max(0, self.margin - distance)) ** 2
 

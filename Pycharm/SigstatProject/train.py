@@ -12,15 +12,20 @@ def train(model, optimizer, device, data):
     model.train()
     #TODO batch implementalasa
 
+
     # az osszes adatot atkuljuk a halon, (kep1, kep1,y)
     for pair in data:
         #TODO valoszinuleg ez nem mukodik itt jol
         s1 = torch.from_numpy(pair[0]).float().to(device)
         s2 = torch.from_numpy(pair[1]).float().to(device)
 
+
         #Itt az y erteke teljesen megvaltozik valmire, nem tudom hogy a to(Device) vagy a ShortTensor rontja el
         y = torch.ShortTensor(pair[2]).to(device)
         print(y)
+        print(pair[2])
+        print(s1.shape)
+
 
         optimizer.zero_grad()
         s1, s2 = model(s1, s2)
