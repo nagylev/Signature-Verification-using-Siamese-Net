@@ -23,12 +23,10 @@ class SigSiameseNet(torch.nn.Module):
 
     '''
 
-
-
     def __init__(self):
         super().__init__()
         # input image [600x1000] [4]channel
-        #input shape[4,1,1,600,1000,]
+        # input shape[4,1,1,600,1000,]
         self.cnnModel = nn.Sequential(
             # input shape megallapitasa (img_w, img_h,1)[4 van sajnos]
             nn.Conv2d(1, 96, kernel_size=11),

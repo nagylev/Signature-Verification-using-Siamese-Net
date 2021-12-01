@@ -1,8 +1,5 @@
-import numpy as np
 import torch
 import loss as CL
-
-from loss import ContrastiveLoss
 
 
 def train(model, optimizer, device, data):
@@ -18,14 +15,26 @@ def train(model, optimizer, device, data):
         s2 = torch.from_numpy(pair[1]).float().to(device)
         y = torch.ShortTensor(pair[2]).to(device)
 
-        # optimizeer.zero grad
+        optimizer.zero_grad()
         s1, s2 = model(s1, s2)
-        loss.forward(s1, s2, y)
-        loss.backward()
+        result = loss(s1, s2, y)
+        result.backward()
         optimizer.step()
         print(i)
         i += 1
 
 
-def eval(model, loss, data):
+@torch.no_grad()
+def eval(model, loss, data, device):
+    model.eval()
+
+    for pair in data:
+        s1 = torch.from_numpy(pair[0]).float().to(device)
+        s2 = torch.from_numpy(pair[1]).float().to(device)
+        y = torch.ShortTensor(pair[2]).to(device)
+
+        s1, s2 = model(s1, s2)
+        result = loss(s1,s2,y)
+
+    #TODO calculate accuracy
     return
