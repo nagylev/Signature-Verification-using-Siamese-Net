@@ -8,7 +8,7 @@ import PIL
 # image scanner
 
 
-class DataLoader():
+class DataLoader:
     def __init__(self):
         self.genuine_images = []
         self.forged_images = []
