@@ -9,11 +9,16 @@ def train(model, optimizer, device, data):
     # batch implementalasa
 
     i = 0
-    print(len(data[0]))
+    # print(len(data[0]))
+    #TODO hiba helye if we rigth
     for pair in data:
         s1 = torch.from_numpy(pair[0]).float().to(device)
         s2 = torch.from_numpy(pair[1]).float().to(device)
-        y = torch.ShortTensor(pair[2]).to(device)
+        y = torch.IntTensor(pair[2]).to(device)
+
+        print(pair[2])
+        print(y)
+        print(s1)
 
         optimizer.zero_grad()
         s1, s2 = model(s1, s2)
