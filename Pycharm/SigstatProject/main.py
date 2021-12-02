@@ -11,6 +11,7 @@ import random
 torch.manual_seed(444)
 torch.cuda.manual_seed_all(444)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(torch.cuda.is_available())
 #model attoltese
 model = SiameseModel.SigSiameseNet().to(device)
 

@@ -32,7 +32,7 @@ class SigSiameseNet(torch.nn.Module):
             nn.Dropout2d(p=0.3),
 
             nn.Flatten(),
-            nn.Linear(118784, 1024),
+            nn.Linear(23296, 1024),
             nn.ReLU(),
             nn.Dropout2d(p=0.5),
 
