@@ -1,7 +1,7 @@
 import glob
 import numpy as np
 import PIL
-
+import random
 
 class DataLoader:
 
@@ -50,4 +50,19 @@ def createPairs(genuine_images, forged_images):
 
     # egy alairohoz 400 ilyen forged par keletkezik
     # osszesen 20* 400 = 8000
-    return genuine_pairs, forged_pairs
+
+    #11800 képunk lesz
+
+    all_pairs = []
+    all_pairs.extend(genuine_pairs)
+    all_pairs.extend(forged_pairs)
+
+    random.shuffle(all_pairs)
+    print(len(all_pairs))
+
+    split = int(len(all_pairs)*0.8)
+    print(split)
+    train_data = all_pairs[:split]
+    test_data = all_pairs[split:]
+
+    return train_data, test_data
