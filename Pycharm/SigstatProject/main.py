@@ -31,21 +31,21 @@ forged_images = DataLoader.forged_images
 # TODO test train split
 genuine_pairs, forged_pairs = img_read.createPairs(genuine_images, forged_images)
 model.train()
-print(model)
+#print(model)
 
 # teszt tomb megnezni hogy jol mukodik-e a model
 trial_pairs = []
-trial_pairs.extend(genuine_pairs[:10])
-trial_pairs.extend(forged_pairs[:10])
+trial_pairs.extend(genuine_pairs[:2])
+trial_pairs.extend(forged_pairs[:2])
 random.shuffle(trial_pairs)
-
+print(torch.cuda.is_available())
 # futtatas
 for epoch in range(epoch_num):
     print('Epoch {}/{}'.format(epoch, epoch_num))
     print('Training', '-' * 20)
     train.train(model, optimizer, device, trial_pairs)
     print('Evaluating', '-' * 20)
-    eval(model, genuine_pairs)
+    train.eval(model, device, trial_pairs)
     scheduler.step()
 
 

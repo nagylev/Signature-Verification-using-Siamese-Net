@@ -11,7 +11,6 @@ class SigSiameseNet(torch.nn.Module):
         self.cnnModel = nn.Sequential(
 
             nn.Conv2d(1, 96, kernel_size=11),
-
             nn.ReLU(),
             nn.LocalResponseNorm(size=5, k=2, alpha=1e-4, beta=0.75),
 
