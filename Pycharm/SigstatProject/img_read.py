@@ -19,17 +19,19 @@ class PrepSiameseData:
             for img_path in glob.glob(folder_path + '/*.png'):
                 # beolvasas atmeretezes atalakitas
                 # 150x250
-                sign = PIL.Image.open(img_path)
+                sign = PIL.Image.open(img_path).convert('L')
+                # print(sign.size)
                 resized_sign = sign.resize((75, 125))
+                # print(resized_sign)
                 resized_sign = np.array(resized_sign)
                 resized_sign = resized_sign[np.newaxis, ...]
 
-                trans_sign = np.transpose(resized_sign, (3, 0, 1, 2))
+                # trans_sign = np.transpose(resized_sign, (2, 0, 1))
 
                 if img_path.find("Genuine") != -1:
-                    signer_genuine.append(trans_sign)
+                    signer_genuine.append(resized_sign)
                 if img_path.find("Forged") != -1:
-                    signer_forged.append(trans_sign)
+                    signer_forged.append(resized_sign)
             self.genuine_images.append(signer_genuine)
             self.forged_images.append(signer_forged)
 

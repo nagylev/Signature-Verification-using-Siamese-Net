@@ -23,9 +23,5 @@ class SiameseDataSet(Dataset):
         return len(self.df)
 
     def __getitem__(self, index):
-        s1, s2, y = self.df.iloc[index]
-#ey itt baj lehet
-        s1 = Image.open(s1).convert('L')
-        s2 = Image.open(s2).convert('L')
-
-        return s1, s2, y
+        pair = self.df[index]
+        return pair[0], pair[1], pair[2]
