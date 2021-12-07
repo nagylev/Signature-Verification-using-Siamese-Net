@@ -15,13 +15,17 @@ def train(model, optimizer, device, dataLoader, loss):
     # TODO batch implementalasa
 
     # az osszes adatot atkuljuk a halon, (kep1, kep1,y)
-    for batch_idx, (s1,s2,y) in enumerate(dataLoader):
+    for batch_idx, (s1, s2, y) in enumerate(dataLoader):
         # TODO valoszinuleg ez nem mukodik itt jol
-        s1 = torch.tensor(s1).float().to(device)
-        s2 = torch.tensor(s2).float().to(device)
+        # s1 = torch.tensor(s1).float().to(device)
+        # s2 = torch.tensor(s2).float().to(device)
+
+        s1 = s1.to(device)
+        s2 = s2.to(device)
 
         # Itt az y erteke teljesen megvaltozik valmire, nem tudom hogy a to(Device) vagy a ShortTensor rontja el
-        y = torch.tensor(y).to(device)
+        y = y.to(device)
+        # y = torch.tensor(y).to(device)
         print(y)
         # print(pair[2])
         # print(s1.shape)
@@ -37,16 +41,16 @@ def train(model, optimizer, device, dataLoader, loss):
 
 # eval fv, idaig el se jutunk
 @torch.no_grad()
-def eval(model, device, data, loss):
+def eval(model, device, dataLoader, loss):
     model.eval()
 
-    for pair in data:
-        s1 = torch.tensor(pair[0]).float().to(device)
-        s2 = torch.tensor(pair[1]).float().to(device)
-        y = torch.tensor(pair[2]).to(device)
+    for batch_idx, (s1, s2, y) in enumerate(dataLoader):
+        s1 = s1.to(device)
+        s2 = s2.to(device)
+        y = y.to(device)
 
         s1, s2 = model(s1, s2)
         result = loss(s1, s2, y)
 
     # TODO calculate accuracy
-    return
+    return result

@@ -30,8 +30,8 @@ forged_images = DataLoader.forged_images
 
 # TODO test train split
 train_pairs, test_pairs = img_read.createPairs(genuine_images, forged_images)
-train_load = createData.data_loader(train_pairs)
-test_load = createData.data_loader(test_pairs)
+train_load = createData.data_loader(train_pairs, 6)
+test_load = createData.data_loader(test_pairs, 6)
 model.train()
 # print(model)
 

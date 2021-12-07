@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import pandas as pd
+import torch
 
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
@@ -24,4 +25,4 @@ class SiameseDataSet(Dataset):
 
     def __getitem__(self, index):
         pair = self.df[index]
-        return pair[0], pair[1], pair[2]
+        return torch.tensor(pair[0]).float(), torch.tensor(pair[1]).float(), torch.tensor(pair[2]).float()
