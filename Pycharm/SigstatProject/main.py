@@ -3,6 +3,7 @@ import model as SiameseModel
 import loss as CL
 import img_read
 import train
+import create_data as createData
 
 # eszkoz letrehozasa, init
 torch.manual_seed(444)
@@ -19,7 +20,7 @@ loss = CL.ContrastiveLoss(10e-4, 0.75, 1).to(device)
 epoch_num = 20
 
 # ez az altalunk irt dataloader, nem beepitettet hasznalok
-DataLoader = img_read.DataLoader()
+DataLoader = img_read.PrepSiameseData()
 
 DataLoader.load()
 
@@ -29,6 +30,8 @@ forged_images = DataLoader.forged_images
 
 # TODO test train split
 train_pairs, test_pairs = img_read.createPairs(genuine_images, forged_images)
+train_load = createData.data_loader(train_pairs)
+test_load = createData.data_loader(test_pairs)
 model.train()
 # print(model)
 
@@ -40,9 +43,9 @@ model.train()
 for epoch in range(epoch_num):
     print('Epoch {}/{}'.format(epoch, epoch_num))
     print('Training', '-' * 20)
-    train.train(model, optimizer, device, train_pairs, loss)
+    train.train(model, optimizer, device, train_load, loss)
     print('Evaluating', '-' * 20)
-    lost, acc = train.eval(model, device, test_pairs, loss)
+    lost, acc = train.eval(model, device, test_load, loss)
     scheduler.step()
 
     to_save = {

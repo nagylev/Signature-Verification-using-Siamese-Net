@@ -2,8 +2,10 @@ import glob
 import numpy as np
 import PIL
 import random
+import csv
 
-class DataLoader:
+
+class PrepSiameseData:
 
     def __init__(self):
         self.genuine_images = []
@@ -16,7 +18,7 @@ class DataLoader:
             signer_forged = []
             for img_path in glob.glob(folder_path + '/*.png'):
                 # beolvasas atmeretezes atalakitas
-                #150x250
+                # 150x250
                 sign = PIL.Image.open(img_path)
                 resized_sign = sign.resize((75, 125))
                 resized_sign = np.array(resized_sign)
@@ -33,7 +35,7 @@ class DataLoader:
 
 
 # eredeti-eredet --> 1, eredeti-hamis --> 2 párok kialakítása
-def createPairs(genuine_images, forged_images):
+def createPairs(genuine_images, forged_images, batch_size=16):
     genuine_pairs = []
     forged_pairs = []
 
@@ -51,7 +53,7 @@ def createPairs(genuine_images, forged_images):
     # egy alairohoz 400 ilyen forged par keletkezik
     # osszesen 20* 400 = 8000
 
-    #11800 képunk lesz
+    # 11800 képunk lesz
 
     all_pairs = []
     all_pairs.extend(genuine_pairs)
@@ -60,9 +62,10 @@ def createPairs(genuine_images, forged_images):
     random.shuffle(all_pairs)
     print(len(all_pairs))
 
-    split = int(len(all_pairs)*0.8)
+    split = int(len(all_pairs) * 0.8)
     print(split)
     train_data = all_pairs[:split]
     test_data = all_pairs[split:]
 
     return train_data, test_data
+

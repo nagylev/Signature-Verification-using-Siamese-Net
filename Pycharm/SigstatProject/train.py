@@ -1,5 +1,4 @@
 import torch
-import loss as CL
 
 
 # train fuggveny batchekkel meg nem foglalkozik, sem a hiba kiertekelesevel, eloszor csak atakartam rajta futtatni par adatot
@@ -9,6 +8,8 @@ def train(model, optimizer, device, data, loss):
     # es atadom parameterkent megtartja-e a tulajdonsagat
 
     print(loss)
+    calculated_loss = 0
+    samples = 0
 
     model.train()
     # TODO batch implementalasa
