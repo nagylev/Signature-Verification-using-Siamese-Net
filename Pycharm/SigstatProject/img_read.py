@@ -2,7 +2,6 @@ import glob
 import numpy as np
 import PIL
 import random
-import csv
 
 
 class PrepSiameseData:

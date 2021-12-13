@@ -1,5 +1,4 @@
 import os
-
 import torch
 import model as SiameseModel
 import loss as CL
@@ -40,7 +39,7 @@ model.train()
 # teszt tomb megnezni hogy jol mukodik-e a model
 
 
-# futtatas
+# futtatas6
 
 os.makedirs('checkpoints', exist_ok=True)
 
