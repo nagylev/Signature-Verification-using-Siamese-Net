@@ -12,10 +12,12 @@ class PrepSiameseData:
         self.forged_images = []
 
     def load(self):
+        signers = 0
         # loading 5 test images
         for folder_path in glob.glob('data/Train/*'):
             signer_genuine = []
             signer_forged = []
+            signers += 1
             for img_path in glob.glob(folder_path + '/*.png'):
                 # beolvasas atmeretezes atalakitas
                 # 150x250
@@ -35,6 +37,10 @@ class PrepSiameseData:
             self.genuine_images.append(signer_genuine)
             self.forged_images.append(signer_forged)
 
+        print("There are {} signers, with {} genuine and {} forged signs each".format(signers,
+                                                                                      len(self.genuine_images[0]),
+                                                                                      len(self.forged_images[0])))
+
 
 # eredeti-eredet --> 1, eredeti-hamis --> 2 párok kialakítása
 def createPairs(genuine_images, forged_images):
@@ -42,25 +48,41 @@ def createPairs(genuine_images, forged_images):
     test_genuine = []
     train_forged = []
     test_forged = []
+    signers_sign_count = 0
 
     for signer in range(len(genuine_images)):
         signers_sign = []
         for i in range(len(genuine_images[signer]) - 1):
             for j in range(i + 1, len(genuine_images[signer])):
                 signers_sign.append([genuine_images[signer][i], genuine_images[signer][j], 1])
-        train_genuine, test_genuine = Split(signers_sign)
+        tmp_train_genuine, tmp_test_genuine = Split(signers_sign)
+        train_genuine.extend(tmp_train_genuine)
+        test_genuine.extend(tmp_test_genuine)
+        signers_sign_count = len(signers_sign)
     # egy alairohoz 190 ilyen genuine par keletkezik
     # osszesen 20 * 190 = 3800
+    print('After creating pairs, one signer {} genuine-genuine pairs each, for all signers {}'.format(
+        signers_sign_count,
+        (len(
+            train_genuine) + len(
+            test_genuine))))
 
     for signer in range(len(genuine_images)):
         signers_sign = []
         for i in range(len(genuine_images[signer])):
             for j in range(len(forged_images[signer])):
                 signers_sign.append([genuine_images[signer][i], genuine_images[signer][j], 0])
-        train_forged, test_forged = Split(signers_sign)
+        tmp_train_forged, tmp_test_forged = Split(signers_sign)
+        train_forged.extend(tmp_train_forged)
+        test_forged.extend(tmp_test_forged)
+        signers_sign_count = len(signers_sign)
 
     # egy alairohoz 400 ilyen forged par keletkezik
     # osszesen 20* 400 = 8000
+
+    print('After creating pairs, one signer {} genuine-forged pairs each, for all signers {}'.format(
+        signers_sign_count, (len(
+            train_forged) + len(test_forged))))
 
     # 11800 képunk lesz
 
