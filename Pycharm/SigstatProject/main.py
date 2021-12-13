@@ -1,3 +1,5 @@
+import os
+
 import torch
 import model as SiameseModel
 import loss as CL
@@ -28,7 +30,7 @@ DataLoader.load()
 genuine_images = DataLoader.genuine_images
 forged_images = DataLoader.forged_images
 
-# TODO test train split
+
 train_pairs, test_pairs = img_read.createPairs(genuine_images, forged_images)
 train_load = createData.data_loader(train_pairs, 6)
 test_load = createData.data_loader(test_pairs, 6)
@@ -39,6 +41,8 @@ model.train()
 
 
 # futtatas
+
+os.makedirs('checkpoints', exist_ok=True)
 
 for epoch in range(epoch_num):
     print('Epoch {}/{}'.format(epoch, epoch_num))
