@@ -48,15 +48,19 @@ def createPairs(genuine_images, forged_images):
     train_forged = []
     test_forged = []
     signers_sign_count = 0
+    signer_count = 0
 
     for signer in range(len(genuine_images)):
         signers_sign = []
+        signer_count += 1
         for i in range(len(genuine_images[signer]) - 1):
             for j in range(i + 1, len(genuine_images[signer])):
                 signers_sign.append([genuine_images[signer][i], genuine_images[signer][j], 1])
-        tmp_train_genuine, tmp_test_genuine = Split(signers_sign)
-        train_genuine.extend(tmp_train_genuine)
-        test_genuine.extend(tmp_test_genuine)
+        # tmp_train_genuine, tmp_test_genuine = Split(signers_sign)
+        if signer_count < 16:
+            train_genuine.extend(signers_sign)
+        if signer_count >= 16:
+            test_genuine.extend(signers_sign)
         signers_sign_count = len(signers_sign)
     # egy alairohoz 190 ilyen genuine par keletkezik
     # osszesen 20 * 190 = 3800
@@ -66,14 +70,18 @@ def createPairs(genuine_images, forged_images):
             train_genuine) + len(
             test_genuine))))
 
+    signer_count=0
     for signer in range(len(genuine_images)):
         signers_sign = []
+        signer_count += 1
         for i in range(len(genuine_images[signer])):
             for j in range(len(forged_images[signer])):
                 signers_sign.append([genuine_images[signer][i], genuine_images[signer][j], 0])
-        tmp_train_forged, tmp_test_forged = Split(signers_sign)
-        train_forged.extend(tmp_train_forged)
-        test_forged.extend(tmp_test_forged)
+        # tmp_train_forged, tmp_test_forged = Split(signers_sign)
+        if signer_count < 16:
+            train_forged.extend(signers_sign)
+        if signer_count >= 16:
+            test_forged.extend(signers_sign)
         signers_sign_count = len(signers_sign)
 
     # egy alairohoz 400 ilyen forged par keletkezik

@@ -17,7 +17,7 @@ model = SiameseModel.SigSiameseNet().to(device)
 optimizer = torch.optim.RMSprop(model.parameters(), lr=1e-4, eps=1e-8, weight_decay=5e-4, momentum=0.9)
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 5, 0.1)
 
-loss = CL.ContrastiveLoss(10e-4, 0.75, 1).to(device)
+loss = CL.ContrastiveLoss(1, 1, 1).to(device)
 epoch_num = 20
 
 # ez az altalunk irt dataloader, nem beepitettet hasznalok
