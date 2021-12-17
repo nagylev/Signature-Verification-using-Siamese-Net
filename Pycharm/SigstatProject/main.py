@@ -1,17 +1,17 @@
-import os
 import torch
 import model as SiameseModel
-import loss as CL
+import loss_accuracy as CL
 import img_read
 import train
 import create_data as createData
 
-# eszkoz letrehozasa, init
+# creating the device
 torch.manual_seed(444)
 torch.cuda.manual_seed_all(444)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# checking if we have cuda
 print(torch.cuda.is_available())
-# model attoltese
+# create model and send to device
 model = SiameseModel.SigSiameseNet().to(device)
 
 optimizer = torch.optim.RMSprop(model.parameters(), lr=1e-4, eps=1e-8, weight_decay=5e-4, momentum=0.9)
@@ -20,44 +20,31 @@ scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 5, 0.1)
 loss = CL.ContrastiveLoss(1, 1, 1).to(device)
 epoch_num = 20
 
-# ez az altalunk irt dataloader, nem beepitettet hasznalok
+# loading the images
 DataLoader = img_read.PrepSiameseData()
-
 DataLoader.load()
 
-# Összes valos eredeti es hamis alairas
+# get the forged and genuine images
 genuine_images = DataLoader.genuine_images
 forged_images = DataLoader.forged_images
 
-
+# separating test and train data
 train_pairs, test_pairs = img_read.createPairs(genuine_images, forged_images)
 train_load = createData.data_loader(train_pairs, 6)
 test_load = createData.data_loader(test_pairs, 6)
+
+# start train
 model.train()
-# print(model)
 
 # teszt tomb megnezni hogy jol mukodik-e a model
 
-
-# futtatas6
-
-os.makedirs('checkpoints', exist_ok=True)
-
+# running 20 epoch training
 for epoch in range(epoch_num):
     print('Epoch {}/{}'.format(epoch, epoch_num))
-    print('Training', '-' * 20)
+    print('Training', '-' * 40)
     train.train(model, optimizer, device, train_load, loss)
-    print('Evaluating', '-' * 20)
+    print('Evaluating', '-' * 40)
     lost, acc = train.eval(model, device, test_load, loss)
     scheduler.step()
-
-    to_save = {
-        'model': model.state_dict(),
-        'scheduler': scheduler.state_dict(),
-        'optim': optimizer.state_dict(),
-    }
-
-    print('Saving checkpoint..')
-    torch.save(to_save, 'checkpoints/epoch_{}_loss_{:.3f}_acc_{:.3f}.pt'.format(epoch, lost, acc))
 
 print('Done')

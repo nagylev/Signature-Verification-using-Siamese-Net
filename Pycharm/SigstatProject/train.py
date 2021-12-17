@@ -1,7 +1,5 @@
 import torch
-
-# train fuggveny batchekkel meg nem foglalkozik, sem a hiba kiertekelesevel, eloszor csak atakartam rajta futtatni par adatot
-from loss import accuracy
+from loss_accuracy import accuracy
 
 
 def train(model, optimizer, device, dataLoader, loss):
@@ -30,7 +28,6 @@ def train(model, optimizer, device, dataLoader, loss):
         optimizer.step()
 
 
-# eval fv, idaig el se jutunk
 @torch.no_grad()
 def eval(model, device, dataLoader, loss):
     model.eval()

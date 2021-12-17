@@ -12,23 +12,20 @@ class PrepSiameseData:
 
     def load(self):
         signers = 0
-        # loading 5 test images
-        for folder_path in glob.glob('data/Train/*'):
+        # loading images from data folder
+        for folder_path in glob.glob('data/*'):
             signer_genuine = []
             signer_forged = []
             signers += 1
             for img_path in glob.glob(folder_path + '/*.png'):
-                # beolvasas atmeretezes atalakitas
-                # 150x250
+                # reading each picture and converting them to single channel image
+                # 75x125 size of picture after resize
                 sign = PIL.Image.open(img_path).convert('L')
-                # print(sign.size)
                 resized_sign = sign.resize((75, 125))
-                # print(resized_sign)
                 resized_sign = np.array(resized_sign)
                 resized_sign = resized_sign[np.newaxis, ...]
 
-                # trans_sign = np.transpose(resized_sign, (2, 0, 1))
-
+                # add the picture to the right array
                 if img_path.find("Genuine") != -1:
                     signer_genuine.append(resized_sign)
                 if img_path.find("Forged") != -1:
@@ -41,7 +38,9 @@ class PrepSiameseData:
                                                                                       len(self.forged_images[0])))
 
 
-# eredeti-eredet --> 1, eredeti-hamis --> 2 párok kialakítása
+# creating pairs
+# 1, genuine,genuine
+# 0, genuine,forged
 def createPairs(genuine_images, forged_images):
     train_genuine = []
     test_genuine = []
@@ -56,43 +55,43 @@ def createPairs(genuine_images, forged_images):
         for i in range(len(genuine_images[signer]) - 1):
             for j in range(i + 1, len(genuine_images[signer])):
                 signers_sign.append([genuine_images[signer][i], genuine_images[signer][j], 1])
-        # tmp_train_genuine, tmp_test_genuine = Split(signers_sign)
-        if signer_count < 16:
+
+        # splitting test and train sets
+        if signer_count < 32:
             train_genuine.extend(signers_sign)
-        if signer_count >= 16:
+        if signer_count >= 32:
             test_genuine.extend(signers_sign)
         signers_sign_count = len(signers_sign)
-    # egy alairohoz 190 ilyen genuine par keletkezik
-    # osszesen 20 * 190 = 3800
+    # one signer should have 190 genuine genuine pair
+    # total of 20  190 = 3800
     print('After creating pairs, one signer {} genuine-genuine pairs each, for all signers {}'.format(
         signers_sign_count,
         (len(
             train_genuine) + len(
             test_genuine))))
 
-    signer_count=0
+    signer_count = 0
     for signer in range(len(genuine_images)):
         signers_sign = []
         signer_count += 1
         for i in range(len(genuine_images[signer])):
             for j in range(len(forged_images[signer])):
                 signers_sign.append([genuine_images[signer][i], genuine_images[signer][j], 0])
-        # tmp_train_forged, tmp_test_forged = Split(signers_sign)
-        if signer_count < 16:
+        if signer_count < 2:
             train_forged.extend(signers_sign)
-        if signer_count >= 16:
+        if signer_count >= 2:
             test_forged.extend(signers_sign)
         signers_sign_count = len(signers_sign)
 
-    # egy alairohoz 400 ilyen forged par keletkezik
-    # osszesen 20* 400 = 8000
-
+    # one signer should have 400 genuine forged pair
+    # total of 20 * 400 = 8000
     print('After creating pairs, one signer {} genuine-forged pairs each, for all signers {}'.format(
         signers_sign_count, (len(
             train_forged) + len(test_forged))))
 
-    # 11800 képunk lesz
+    # we`ll have 11800 pictures in total
 
+    # compile train and test data
     train_data = []
     train_data.extend(train_genuine)
     train_data.extend(train_forged)
@@ -104,7 +103,7 @@ def createPairs(genuine_images, forged_images):
 
     return train_data, test_data
 
-
+# split the array in the given ratio
 def Split(array_to_split, size=0.8):
     train_result = []
     test_result = []
