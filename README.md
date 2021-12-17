@@ -12,7 +12,7 @@ This is a university project for the subject [**Training Project Laboratory (VIT
  ### Generated dataset from SVC2004
   - We have 40 signers
   - Each with 20 genuine and 20 forged signatures
-  - The generator we used ([**SigStatGUI**]()) generated the plot of the signatures, showing also pressure and interpolation
+  - The generator we used ([**SigStatGUI**](https://github.com/sigstat/sigstatGUI)) generated the plot of the signatures, showing also pressure and interpolation
   - The program generates pictures with different size
   
 
