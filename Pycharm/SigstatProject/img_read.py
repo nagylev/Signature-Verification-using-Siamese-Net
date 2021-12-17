@@ -89,7 +89,7 @@ def createPairs(genuine_images, forged_images):
         signers_sign_count, (len(
             train_forged) + len(test_forged))))
 
-    # we`ll have 11800 pictures in total
+    # we`ll have 23600 pictures in total
 
     # compile train and test data
     train_data = []
