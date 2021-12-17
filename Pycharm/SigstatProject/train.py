@@ -1,51 +1,71 @@
 import torch
-import loss as CL
+from loss_accuracy import accuracy
 
-
-# train fuggveny batchekkel meg nem foglalkozik, sem a hiba kiertekelesevel, eloszor csak atakartam rajta futtatni par adatot
-
-def train(model, optimizer, device, data, loss):
-    # TODO nem ertem hogy mukodik a to device es nem tudom, hogy ha egy masik file-ben atrakom a valtozot
-    # es atadom parameterkent megtartja-e a tulajdonsagat
-
-    print(loss)
-
+#train of the model
+def train(model, optimizer, device, dataLoader, loss):
     model.train()
-    # TODO batch implementalasa
+    #for loss and accuaracy
+    calculated_loss = 0
+    signs = 0
 
-    # az osszes adatot atkuljuk a halon, (kep1, kep1,y)
-    for pair in data:
-        # TODO valoszinuleg ez nem mukodik itt jol
-        s1 = torch.tensor(pair[0]).float().to(device)
-        s2 = torch.tensor(pair[1]).float().to(device)
+    #enumarate in dataloader (btch-size= 6)
+    for batch_idx, (s1, s2, y) in enumerate(dataLoader):
+        #Data to GPU
+        s1 = s1.to(device)
+        s2 = s2.to(device)
+        y = y.to(device)
 
-        # Itt az y erteke teljesen megvaltozik valmire, nem tudom hogy a to(Device) vagy a ShortTensor rontja el
-        y = torch.tensor(pair[2]).to(device)
-        print(y)
-        print(pair[2])
-        print(s1.shape)
-
+        #set up optimizer
         optimizer.zero_grad()
-        s1, s2 = model(s1, s2)
-        result = loss(s1, s2, y)  # itt dobja a hibat
-        # Boolean value of Tensor with more than one value is ambiguous
 
+        #feed images to net
+        s1, s2 = model(s1, s2)
+
+        #calculate loss
+        result = loss(s1, s2, y)
+        signs += len(s1)
+        calculated_loss += result.item() * len(s1)
+
+        #print loss
+        if (batch_idx + 1) % 30 == 0 or batch_idx == len(dataLoader) - 1:
+            print('{}/{}: Loss: {:.4f}'.format(batch_idx + 1, len(dataLoader), calculated_loss / signs))
+
+        #propagat backward
         result.backward()
         optimizer.step()
 
-
-# eval fv, idaig el se jutunk
+#evaluation of the model
 @torch.no_grad()
-def eval(model, device, data, loss):
+def eval(model, device, dataLoader, loss):
     model.eval()
 
-    for pair in data:
-        s1 = torch.tensor(pair[0]).float().to(device)
-        s2 = torch.tensor(pair[1]).float().to(device)
-        y = torch.tensor(pair[2]).to(device)
+    # for loss and accuaracy
+    distances = []
+    calculated_loss = 0
+    signs = 0
 
+    #enumerate in dataloader
+    for batch_idx, (s1, s2, y) in enumerate(dataLoader):
+        #data to GPU
+        s1 = s1.to(device)
+        s2 = s2.to(device)
+        y = y.to(device)
+
+        #feed images to model
         s1, s2 = model(s1, s2)
         result = loss(s1, s2, y)
+        distances.extend(zip(torch.pairwise_distance(s1, s2, 2).cpu().tolist(), y.cpu().tolist()))
 
-    # TODO calculate accuracy
-    return
+        signs += len(s1)
+        calculated_loss += result.item() * len(s1)
+
+        #print loss
+        if (batch_idx + 1) % 30 == 0 or batch_idx == len(dataLoader) - 1:
+            print('{}/{}: Loss: {:.4f}'.format(batch_idx + 1, len(dataLoader), calculated_loss / signs))
+
+    #calculate accuracy
+    distances, y = zip(*distances)
+    distances, y = torch.tensor(distances), torch.tensor(y)
+    max_accuracy = accuracy(distances, y)
+    print(f'Max  val_accuracy: {max_accuracy}')
+    return calculated_loss / signs, max_accuracy

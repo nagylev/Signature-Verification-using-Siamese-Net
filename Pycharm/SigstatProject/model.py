@@ -6,8 +6,7 @@ class SigSiameseNet(torch.nn.Module):
 
     def __init__(self):
         super().__init__()
-        # input image [150x250] [4]channel
-        # input shape[4,1,250,150]
+
         self.cnnModel = nn.Sequential(
 
             nn.Conv2d(1, 96, kernel_size=11),
